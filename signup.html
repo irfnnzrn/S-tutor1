@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — Sign Up</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+  <style>
+    body { justify-content: center; align-items: center; min-height: 100vh; background: var(--cream); }
+
+    .auth-shell {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 900px;
+      width: 100%;
+      min-height: 600px;
+      margin: 40px 16px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Left panel — brand */
+    .auth-brand {
+      background: var(--navy);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 44px;
+    }
+    .auth-brand-logo {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .auth-brand-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+    .auth-brand-body h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--white);
+    }
+    .auth-brand-body p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+    }
+    .perks { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .perks li {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.75);
+      padding-left: 18px;
+      position: relative;
+    }
+    .perks li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: rgba(255,255,255,0.35);
+    }
+    .auth-brand-footer {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* Right panel — form */
+    .auth-form-panel {
+      background: var(--white);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    .auth-form-panel h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .auth-subtitle {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .auth-subtitle a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--navy); }
+
+    /* Role toggle */
+    .role-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .role-btn {
+      padding: 11px;
+      border: 1.5px solid var(--slot);
+      border-radius: var(--radius-md);
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+      text-align: center;
+    }
+    .role-btn.active {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .field input {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--slot);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      color: var(--navy);
+      transition: border-color .2s, box-shadow .2s;
+      width: 100%;
+    }
+    .field input:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(26,26,78,0.07);
+      outline: none;
+    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .terms {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .terms a { color: var(--navy); text-decoration: none; font-weight: 600; }
+
+    .btn-auth {
+      width: 100%;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .02em;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-auth:hover { opacity: .85; transform: translateY(-1px); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--cream-dark);
+    }
+
+    .btn-google {
+      width: 100%;
+      background: var(--white);
+      color: var(--navy);
+      border: 1.5px solid var(--slot);
+      border-radius: var(--radius-md);
+      padding: 13px;
+      font-family: var(--font);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-google:hover { background: var(--surface-alt); border-color: var(--navy); }
+    .g-icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+    @media (max-width: 640px) {
+      body { align-items: flex-start; }
+      .auth-shell { grid-template-columns: 1fr; margin: 0; border-radius: 0; }
+      .auth-brand { display: none; }
+      .auth-form-panel { padding: 60px 24px 40px; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-shell">
+
+    <!-- Brand side -->
+    <div class="auth-brand">
+      <a href="index.html" class="auth-brand-logo">S+Tutor.my</a>
+      <div class="auth-brand-body">
+        <h2>Start learning today.</h2>
+        <p>Join thousands of students finding the right tutor across Malaysia.</p>
+        <ul class="perks">
+          <li>Browse 500+ verified tutors</li>
+          <li>Book in minutes</li>
+          <li>Flexible online & offline sessions</li>
+          <li>Free to sign up, no hidden fees</li>
+        </ul>
+      </div>
+      <div class="auth-brand-footer">© 2026 S+Tutor.my</div>
+    </div>
+
+    <!-- Form side -->
+    <div class="auth-form-panel">
+      <h1>Create account</h1>
+      <p class="auth-subtitle">
+        Already have one? <a href="login.html">Log in</a>
+      </p>
+
+      <!-- Role selector -->
+      <div class="role-toggle">
+        <button class="role-btn active" id="roleStudent" onclick="setRole('student')">I'm a Student</button>
+        <button class="role-btn" id="roleTutor" onclick="setRole('tutor')">I'm a Tutor</button>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>First Name</label>
+          <input type="text" placeholder="Ahmad" autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" placeholder="Razif" autocomplete="family-name" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" placeholder="Min. 8 characters" autocomplete="new-password" />
+      </div>
+
+      <p class="terms">
+        By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      <button class="btn-auth" onclick="location.href='index.html'">Create Account</button>
+
+      <div class="divider">or</div>
+
+      <button class="btn-google">
+        <svg class="g-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+          <path d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    function setRole(role) {
+      document.getElementById('roleStudent').classList.toggle('active', role === 'student');
+      document.getElementById('roleTutor').classList.toggle('active', role === 'tutor');
+    }
+
+    /* ── Sign Up logic ── */
+    document.querySelector('.btn-auth').addEventListener('click', function(e) {
+      e.preventDefault();
+      const firstName = document.querySelectorAll('input[type="text"]')[0].value.trim();
+      const lastName  = document.querySelectorAll('input[type="text"]')[1].value.trim();
+      const email     = document.querySelector('input[type="email"]').value.trim();
+      const password  = document.querySelector('input[type="password"]').value;
+
+      /* Basic validation */
+      if (!firstName || !lastName) { showError("Sila masukkan nama anda."); return; }
+      if (!email || !email.includes('@')) { showError("Sila masukkan email yang sah."); return; }
+      if (password.length < 8) { showError("Password mestilah sekurang-kurangnya 8 aksara."); return; }
+
+      const fullName = firstName + " " + lastName;
+
+      /* Save to localStorage */
+      STAuth.saveUser(email, fullName);
+
+      /* Redirect to home */
+      window.location.href = "index.html";
+    });
+
+    function showError(msg) {
+      let err = document.getElementById('authError');
+      if (!err) {
+        err = document.createElement('p');
+        err.id = 'authError';
+        err.style.cssText = 'color:#c0392b;font-size:.82rem;margin-bottom:12px;padding:10px 14px;background:#fdf0ef;border-radius:8px;border-left:3px solid #c0392b;';
+        document.querySelector('.btn-auth').insertAdjacentElement('beforebegin', err);
+      }
+      err.textContent = msg;
+    }
+  </script>
+
+</body>
+</html>

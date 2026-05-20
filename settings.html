@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — Settings</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+  <style>
+
+    /* ── Page layout ── */
+    .settings-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+      width: 100%;
+      flex: 1;
+    }
+
+    .settings-heading {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .settings-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    /* ── Section block ── */
+    .settings-section {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: 16px 24px 8px;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Individual row ── */
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .settings-row:last-child { border-bottom: none; }
+
+    .row-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+
+    .row-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .row-text { flex: 1; min-width: 0; }
+    .row-title {
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .row-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── Toggle switch ── */
+    .toggle-wrap {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .toggle-wrap input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--slot);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: background .25s;
+      border: 1.5px solid var(--border);
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--white);
+      border-radius: 50%;
+      transition: transform .25s, background .25s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.18);
+    }
+    .toggle-wrap input:checked + .toggle-slider {
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+    .toggle-wrap input:checked + .toggle-slider::before {
+      transform: translateY(-50%) translateX(22px);
+    }
+
+
+
+    /* ── Profile edit mini form ── */
+    .profile-edit-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 18px 24px;
+    }
+    .profile-edit-form .full-width { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+    .form-group input {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--slot);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: var(--navy);
+    }
+    .form-group input:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(26,26,78,0.07);
+      outline: none;
+    }
+    .btn-save-profile {
+      grid-column: 1 / -1;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-save-profile:hover { opacity: .85; transform: translateY(-1px); }
+
+    /* ── Danger zone ── */
+    .settings-section.danger .section-label {
+      color: #c0392b;
+      background: #fdf0ef;
+      border-bottom-color: rgba(192,57,43,.12);
+    }
+    .settings-section.danger { border-color: rgba(192,57,43,.18); }
+
+    .btn-logout-settings, .btn-danger {
+      padding: 8px 20px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+    .btn-logout-settings {
+      background: transparent;
+      color: #c0392b;
+      border: 1.5px solid #c0392b;
+    }
+    .btn-logout-settings:hover { background: #fdf0ef; }
+
+    .btn-danger {
+      background: transparent;
+      color: #c0392b;
+      border: 1.5px solid rgba(192,57,43,.35);
+    }
+    .btn-danger:hover { border-color: #c0392b; background: #fdf0ef; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--navy);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: var(--radius-pill);
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      z-index: 9999;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .3s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Logged-out state ── */
+    .guest-notice {
+      background: var(--surface-alt);
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 24px;
+    }
+    .guest-notice a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--navy); }
+
+    @media (max-width: 700px) {
+      .settings-wrapper { padding: 24px 16px 60px; }
+      .profile-edit-form { grid-template-columns: 1fr; }
+      .settings-row { padding: 14px 18px; }
+      .section-label { padding: 14px 18px 8px; }
+      .profile-edit-form { padding: 14px 18px; }
+      .guest-notice { margin: 14px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+        <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+      </svg>
+    </div>
+    <span class="logo-text">S+Tutor.my</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="list.html">Tutors</a></li>
+    <li><a href="chat.html">Chat</a></li>
+  </ul>
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+  <div class="side-menu-header">
+    <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+    <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+  </div>
+  <nav class="side-menu-nav">
+    <a href="index.html">Home</a>
+    <a href="list.html">Find Tutors</a>
+    <a href="chat.html">Chat</a>
+    <a href="favourite.html">Favourites</a>
+    <a href="mybooking.html">My Bookings</a>
+    <a href="about.html">About Us</a>
+    <a href="settings.html" class="active">Settings</a>
+  </nav>
+  <div class="side-menu-footer">
+    <a href="login.html" class="btn-login">Log In</a>
+    <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+  </div>
+</aside>
+
+<script>
+  (function () {
+    var btn = document.getElementById("hamburgerBtn");
+    var menu = document.getElementById("sideMenu");
+    var overlay = document.getElementById("menuOverlay");
+    var close = document.getElementById("menuClose");
+    function openMenu() { menu.classList.add("is-open"); overlay.classList.add("is-open"); btn.classList.add("is-open"); btn.setAttribute("aria-expanded","true"); document.body.style.overflow="hidden"; }
+    function closeMenu() { menu.classList.remove("is-open"); overlay.classList.remove("is-open"); btn.classList.remove("is-open"); btn.setAttribute("aria-expanded","false"); document.body.style.overflow=""; }
+    btn.addEventListener("click", openMenu);
+    close.addEventListener("click", closeMenu);
+    overlay.addEventListener("click", closeMenu);
+    document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeMenu(); });
+  })();
+</script>
+
+<!-- MAIN CONTENT -->
+<div class="settings-wrapper">
+
+  <h1 class="settings-heading" id="pageHeading">Settings</h1>
+  <p class="settings-sub" id="pageSub">Manage your preferences and account.</p>
+
+  <!-- ① APPEARANCE -->
+  <div class="settings-section">
+    <div class="section-label" id="labelAppearance">Appearance</div>
+
+    <!-- Night Mode -->
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">🌙</div>
+        <div class="row-text">
+          <div class="row-title" id="labelNightMode">Night Mode</div>
+          <div class="row-desc" id="descNightMode">Switch to a dark purple theme that's easier on the eyes.</div>
+        </div>
+      </div>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="nightModeToggle" />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+
+
+  </div>
+
+  <!-- ② NOTIFICATIONS -->
+  <div class="settings-section">
+    <div class="section-label" id="labelNotifications">Notifications</div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">📅</div>
+        <div class="row-text">
+          <div class="row-title" id="labelBookingReminders">Booking Reminders</div>
+          <div class="row-desc" id="descBookingReminders">Get reminded 1 hour before your session starts.</div>
+        </div>
+      </div>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="notifBookings" checked />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">💬</div>
+        <div class="row-text">
+          <div class="row-title" id="labelChatNotif">Chat Notifications</div>
+          <div class="row-desc" id="descChatNotif">Receive alerts when a tutor replies to your message.</div>
+        </div>
+      </div>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="notifChat" checked />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">📢</div>
+        <div class="row-text">
+          <div class="row-title" id="labelPromo">Promotions &amp; Tips</div>
+          <div class="row-desc" id="descPromo">Study tips, new tutor alerts, and special offers.</div>
+        </div>
+      </div>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="notifPromo" />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+  </div>
+
+  <!-- ③ ACCOUNT (only shown when logged in) -->
+  <div class="settings-section" id="accountSection">
+    <div class="section-label" id="labelAccount">Account</div>
+    <div id="accountContent">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- ④ DANGER ZONE -->
+  <div class="settings-section danger" id="dangerSection" style="display:none">
+    <div class="section-label" id="labelDanger">Account Actions</div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">🚪</div>
+        <div class="row-text">
+          <div class="row-title" id="labelLogout">Log Out</div>
+          <div class="row-desc" id="descLogout">Sign out of your S+Tutor.my account on this device.</div>
+        </div>
+      </div>
+      <button class="btn-logout-settings" id="logoutBtn" onclick="doLogout()">Log Out</button>
+    </div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">🗑️</div>
+        <div class="row-text">
+          <div class="row-title" id="labelDeleteAccount">Delete Account</div>
+          <div class="row-desc" id="descDeleteAccount">Permanently remove your account and all saved data.</div>
+        </div>
+      </div>
+      <button class="btn-danger" onclick="confirmDelete()" id="deleteBtn">Delete</button>
+    </div>
+
+  </div>
+
+  <!-- ⑤ ABOUT -->
+  <div class="settings-section">
+    <div class="section-label" id="labelAbout">About</div>
+
+    <div class="settings-row" style="cursor:pointer" onclick="location.href='about.html'">
+      <div class="row-left">
+        <div class="row-icon">ℹ️</div>
+        <div class="row-text">
+          <div class="row-title" id="labelAboutUs">About S+Tutor.my</div>
+          <div class="row-desc" id="descAboutUs">Learn more about our platform and mission.</div>
+        </div>
+      </div>
+      <span style="color:var(--muted);font-size:1.1rem">›</span>
+    </div>
+
+    <div class="settings-row">
+      <div class="row-left">
+        <div class="row-icon">📄</div>
+        <div class="row-text">
+          <div class="row-title" id="labelVersion">App Version</div>
+          <div class="row-desc">S+Tutor.my Web · v1.0.0</div>
+        </div>
+      </div>
+      <span style="font-size:0.78rem;color:var(--muted);font-weight:600;">2026</span>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2026 S+Tutor.my. All rights reserved.</p>
+</footer>
+
+<script src="auth.js"></script>
+<script>
+/* ======================================================
+   SETTINGS PAGE LOGIC
+   ====================================================== */
+
+/* ── i18n strings ── */
+/* ── State ── */
+let nightMode = localStorage.getItem("stutor_night") === "1";
+
+/* ── Apply night mode immediately (before DOMContentLoaded) ── */
+if (nightMode) { document.body.classList.add("night-mode"); document.documentElement.classList.add("night-mode"); }
+
+
+
+/* ── Render account section ── */
+function renderAccount() {
+  const user = STAuth.getUser();
+  const section = document.getElementById("accountContent");
+  const dangerSection = document.getElementById("dangerSection");
+
+  if (!user) {
+    section.innerHTML = `
+      <div class="guest-notice">
+        <span>🔒</span>
+        <span>Log in to manage your account details. <a href="login.html">Log in →</a></span>
+      </div>`;
+    dangerSection.style.display = "none";
+    return;
+  }
+
+  dangerSection.style.display = "block";
+
+  const nameParts = (user.name || "").split(" ");
+  const firstName = nameParts[0] || "";
+  const lastName  = nameParts.slice(1).join(" ") || "";
+
+  section.innerHTML = `
+    <form class="profile-edit-form" onsubmit="saveProfile(event)">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" id="inputFirstName" value="${firstName}" placeholder="First Name" />
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" id="inputLastName" value="${lastName}" placeholder="Last Name" />
+      </div>
+      <div class="form-group full-width">
+        <label>Email</label>
+        <input type="email" id="inputEmail" value="${user.email}" placeholder="Email" />
+      </div>
+      <button type="submit" class="btn-save-profile">Save Changes</button>
+    </form>`;
+}
+
+/* ── Save profile ── */
+function saveProfile(e) {
+  e.preventDefault();
+  const first = document.getElementById("inputFirstName").value.trim();
+  const last  = document.getElementById("inputLastName").value.trim();
+  const email = document.getElementById("inputEmail").value.trim();
+  if (!email.includes("@")) { showToast("⚠️ Invalid email."); return; }
+  const fullName = (first + " " + last).trim();
+  STAuth.saveUser(email, fullName);
+  showToast("Changes saved ✓");
+}
+
+/* ── Night mode toggle ── */
+function initNightToggle() {
+  const toggle = document.getElementById("nightModeToggle");
+  toggle.checked = nightMode;
+  toggle.addEventListener("change", () => {
+    nightMode = toggle.checked;
+    localStorage.setItem("stutor_night", nightMode ? "1" : "0");
+    document.body.classList.toggle("night-mode", nightMode);
+    document.documentElement.classList.toggle("night-mode", nightMode);
+    showToast(nightMode ? "Night mode on 🌙" : "Night mode off ☀️");
+  });
+}
+
+
+
+/* ── Notification toggles — persist ── */
+function initNotifToggles() {
+  ["notifBookings","notifChat","notifPromo"].forEach(id => {
+    const el = document.getElementById(id);
+    const saved = localStorage.getItem("stutor_" + id);
+    if (saved !== null) el.checked = saved === "1";
+    el.addEventListener("change", () => {
+      localStorage.setItem("stutor_" + id, el.checked ? "1" : "0");
+      showToast("Changes saved ✓");
+    });
+  });
+}
+
+/* ── Logout ── */
+function doLogout() {
+  showToast("Logged out. See you soon! 👋");
+  setTimeout(() => STAuth.logout(), 1200);
+}
+
+/* ── Delete account ── */
+function confirmDelete() {
+  if (!confirm("Are you sure? This will clear all your data.")) return;
+  localStorage.clear();
+  showToast("Account deleted. Redirecting…");
+  setTimeout(() => location.href = "index.html", 1500);
+}
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
+}
+
+/* ── INIT ── */
+document.addEventListener("DOMContentLoaded", () => {
+  initNightToggle();
+  initNotifToggles();
+  renderAccount();
+});
+</script>
+</body>
+</html>

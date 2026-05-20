@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my &mdash; About Us</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+  <style>
+    /* ── Hero ── */
+    .about-hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 72px 40px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,.04);
+      border-radius: 50%;
+    }
+    .about-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -40px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,.03);
+      border-radius: 50%;
+    }
+    .about-hero-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.5);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-pill);
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    .about-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 18px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .about-hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,.65);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      background: var(--white);
+      border-bottom: 1.5px solid var(--border);
+      padding: 28px 40px;
+    }
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── Sections ── */
+    .about-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 64px 40px;
+    }
+    .about-section + .about-section {
+      border-top: 1.5px solid var(--border);
+      padding-top: 56px;
+    }
+    .section-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .about-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .about-section > p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.75;
+      max-width: 680px;
+    }
+
+    /* Mission / Vision split */
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .mv-card {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .mv-card-icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .mv-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .mv-card p {
+      font-size: 0.87rem;
+      color: #555;
+      line-height: 1.65;
+    }
+
+    /* Values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .value-card {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .value-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .value-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .value-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── Team ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .team-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform .22s, box-shadow .22s;
+    }
+    .team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+    .team-avatar-wrap {
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      position: relative;
+      background: var(--cream-dark);
+    }
+    .team-avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    /* Irfan: group photo, crop to right person */
+    .team-card:nth-child(1) .team-avatar-wrap img {
+      object-position: 72% top;
+      transform: scale(1.5);
+      transform-origin: 72% 30%;
+    }
+
+    .team-info {
+      padding: 16px;
+      border-top: 1.5px solid var(--border);
+    }
+    .team-name {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .team-matric {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: monospace;
+      margin-bottom: 3px;
+    }
+    .team-role {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .team-bio {
+      font-size: 0.77rem;
+      color: #555;
+      line-height: 1.55;
+    }
+    .team-contrib {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .contrib-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--navy);
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 3px 9px;
+    }
+
+    /* CTA strip */
+    .about-cta {
+      background: var(--navy);
+      color: var(--white);
+      text-align: center;
+      padding: 60px 40px;
+    }
+    .about-cta h2 {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .about-cta p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 28px;
+    }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-cta-light {
+      background: var(--white);
+      color: var(--navy);
+      border: 2px solid var(--white);
+      border-radius: var(--radius-pill);
+      padding: 12px 28px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .btn-cta-light:hover { opacity: .85; }
+    .btn-cta-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: var(--radius-pill);
+      padding: 12px 28px;
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s;
+    }
+    .btn-cta-outline:hover { border-color: var(--white); }
+
+    @media (max-width: 900px) {
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .values-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .about-hero { padding: 48px 20px 56px; }
+      .stats-bar { padding: 24px 20px; }
+      .about-section { padding: 40px 20px; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .mv-grid { grid-template-columns: 1fr; }
+      .values-grid { grid-template-columns: 1fr; }
+      .about-cta { padding: 44px 20px; }
+    }
+    @media (max-width: 400px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+          <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+        </svg>
+      </div>
+      <span class="logo-text">S+Tutor.my</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="list.html">Tutors</a></li>
+      <li><a href="chat.html">Chat</a></li>
+    </ul>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+    <div class="side-menu-header">
+      <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+      <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="index.html">Home</a>
+      <a href="list.html">Find Tutors</a>
+      <a href="chat.html">Chat</a>
+      <a href="favourite.html">Favourites</a>
+      <a href="mybooking.html">My Bookings</a>
+      <a href="about.html" class="active">About Us</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="side-menu-footer">
+      <a href="login.html" class="btn-login">Log In</a>
+      <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("hamburgerBtn");
+      var menu = document.getElementById("sideMenu");
+      var overlay = document.getElementById("menuOverlay");
+      var close = document.getElementById("menuClose");
+      function openMenu() { menu.classList.add("is-open"); overlay.classList.add("is-open"); btn.classList.add("is-open"); btn.setAttribute("aria-expanded","true"); document.body.style.overflow="hidden"; }
+      function closeMenu() { menu.classList.remove("is-open"); overlay.classList.remove("is-open"); btn.classList.remove("is-open"); btn.setAttribute("aria-expanded","false"); document.body.style.overflow=""; }
+      btn.addEventListener("click", openMenu);
+      close.addEventListener("click", closeMenu);
+      overlay.addEventListener("click", closeMenu);
+      document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeMenu(); });
+    })();
+  </script>
+
+  <!-- HERO -->
+  <section class="about-hero">
+    <div class="about-hero-tag">About S+Tutor.my</div>
+    <h1>Connecting Students with the Right Tutor, Every Time.</h1>
+    <p>We built S+Tutor.my because finding a great tutor in Malaysia shouldn't be a guessing game. Quality education is a right, not a privilege.</p>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Verified Tutors</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3,200+</div>
+        <div class="stat-label">Sessions Booked</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.8&#9733;</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Subjects Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUR STORY -->
+  <div class="about-section">
+    <div class="section-tag">Our Story</div>
+    <h2>Built by students, for students.</h2>
+    <p>S+Tutor.my started as a university project with a simple question: why is it so hard to find a reliable, affordable tutor in Malaysia? We were frustrated by scattered Facebook groups, inconsistent pricing, and zero accountability. So we built something better &mdash; a platform where students can discover, compare, and book verified tutors in minutes, not days.</p>
+
+    <div class="mv-grid">
+      <div class="mv-card">
+        <div class="mv-card-icon">&#127919;</div>
+        <h3>Our Mission</h3>
+        <p>To make quality tutoring accessible to every Malaysian student, regardless of location or budget &mdash; through a transparent, trusted, and easy-to-use platform.</p>
+      </div>
+      <div class="mv-card">
+        <div class="mv-card-icon">&#128301;</div>
+        <h3>Our Vision</h3>
+        <p>To become Malaysia's most trusted tutoring marketplace, where every student achieves their academic potential and every tutor builds a sustainable, rewarding career.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALUES -->
+  <div class="about-section">
+    <div class="section-tag">What We Stand For</div>
+    <h2>Our Core Values</h2>
+    <p>Everything we build, every decision we make, is guided by these principles.</p>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">&#129309;</div>
+        <div class="value-title">Trust &amp; Transparency</div>
+        <div class="value-desc">Verified profiles, honest reviews, and clear pricing. No hidden fees, ever.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">&#127807;</div>
+        <div class="value-title">Accessibility</div>
+        <div class="value-desc">Quality education for every student &mdash; from Kuala Lumpur to Kuantan to Kota Kinabalu.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">&#9889;</div>
+        <div class="value-title">Simplicity</div>
+        <div class="value-desc">Finding and booking a tutor should take minutes, not hours. We obsess over ease-of-use.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">&#127942;</div>
+        <div class="value-title">Excellence</div>
+        <div class="value-desc">We hold our tutors to high standards so students always get a great learning experience.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">&#128274;</div>
+        <div class="value-title">Safety</div>
+        <div class="value-desc">Every tutor is verified. Payments are secure. Your data is protected.</div>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">&#128161;</div>
+        <div class="value-title">Innovation</div>
+        <div class="value-desc">We keep building new features to make learning more effective and enjoyable.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEET THE TEAM -->
+  <div class="about-section">
+    <div class="section-tag">The Team</div>
+    <h2>Meet the people behind S+Tutor.my</h2>
+    <p>We&rsquo;re a team of four &mdash; students who care deeply about education in Malaysia and wanted to do something about it.</p>
+
+    <div class="team-grid">
+
+      <!-- Member 1: Muhammad Irfan Nazran (kanan, blazer biru) -->
+      <div class="team-card">
+        <div class="team-avatar-wrap">
+          <img src="irfan.jpeg" alt="Muhammad Irfan Nazran" class="team-avatar">
+        </div>
+        <div class="team-info">
+          <div class="team-name">Muhammad Irfan Nazran</div>
+          <div class="team-matric">253975</div>
+          <div class="team-role">Lead Developer &amp; Booking System</div>
+          <div class="team-bio">Built the booking flow, My Bookings page, and Settings. Passionate about seamless UX and full-stack development.</div>
+          <div class="team-contrib">
+            <span class="contrib-tag">Booking</span>
+            <span class="contrib-tag">My Bookings</span>
+            <span class="contrib-tag">Settings</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 2: Muhammad Huzaifah (polo shirt, glasses) -->
+      <div class="team-card">
+        <div class="team-avatar-wrap">
+          <img src="huzaifah.jpeg" alt="Muhammad Huzaifah" class="team-avatar">
+        </div>
+        <div class="team-info">
+          <div class="team-name">Muhammad Huzaifah</div>
+          <div class="team-matric">253887</div>
+          <div class="team-role">Frontend Developer &amp; Auth</div>
+          <div class="team-bio">Designed and built the Home page, About Us, Login, and Sign Up. Focused on first impressions and smooth onboarding.</div>
+          <div class="team-contrib">
+            <span class="contrib-tag">Home</span>
+            <span class="contrib-tag">About Us</span>
+            <span class="contrib-tag">Login</span>
+            <span class="contrib-tag">Sign Up</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 3: Omar Lutfi (black coat, red bg) -->
+      <div class="team-card">
+        <div class="team-avatar-wrap">
+          <img src="omar.jpeg" alt="Omar Lutfi bin Mohd Isa" class="team-avatar">
+        </div>
+        <div class="team-info">
+          <div class="team-name">Omar Lutfi bin Mohd Isa</div>
+          <div class="team-matric">257867</div>
+          <div class="team-role">Search &amp; Discovery Engineer</div>
+          <div class="team-bio">Built the Tutor Listing and Favourites pages. Engineered the search and filter system to help students find the right tutor fast.</div>
+          <div class="team-contrib">
+            <span class="contrib-tag">List Tutor</span>
+            <span class="contrib-tag">Favourite</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 4: Ahmad Bukhary (black sweater) -->
+      <div class="team-card">
+        <div class="team-avatar-wrap">
+          <img src="ahmad.jpeg" alt="Ahmad Bukhary Al Haziq" class="team-avatar">
+        </div>
+          <div class="team-name">Ahmad Bukhary Al Haziq</div>
+          <div class="team-matric">250325</div>
+          <div class="team-role">Tutor Experience &amp; Chat</div>
+          <div class="team-bio">Developed the Tutor Profile and Chat pages. Focused on creating a great experience for students connecting with their tutors.</div>
+          <div class="team-contrib">
+            <span class="contrib-tag">Profile</span>
+            <span class="contrib-tag">Chat</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="about-cta">
+    <h2>Ready to find your perfect tutor?</h2>
+    <p>Join thousands of Malaysian students already learning with S+Tutor.my.</p>
+    <div class="cta-btns">
+      <a href="list.html" class="btn-cta-light">Browse Tutors</a>
+      <a href="signup.html" class="btn-cta-outline">Sign Up Free</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2026 S+Tutor.my. All rights reserved.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+</body>
+</html>

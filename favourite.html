@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — My Favourites</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+  <style>
+    .fav-page-header {
+      padding: 40px 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .fav-page-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .fav-page-header p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+    .fav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 40px 60px;
+      width: 100%;
+      flex: 1;
+    }
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .fav-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .22s, box-shadow .22s;
+      cursor: pointer;
+    }
+    .fav-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .fav-card-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .fav-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      background: var(--slot);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .fav-avatar svg { width: 72px; height: 72px; }
+    .fav-info { flex: 1; }
+    .fav-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+    .fav-subject {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .fav-stars {
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+    .fav-stars span {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .fav-remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: #e74c3c;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+    .fav-remove-btn:hover { background: #fdf0ef; }
+    .fav-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--cream-dark);
+      padding-top: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .fav-rate {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+    .fav-rate small {
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .fav-actions { display: flex; gap: 8px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .empty-icon {
+      font-size: 3.5rem;
+      opacity: .35;
+    }
+    .empty-state h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--navy);
+    }
+    .empty-state p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 320px;
+    }
+
+    /* Result count */
+    .fav-count {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 700px) {
+      .fav-page-header, .fav-container { padding-left: 16px; padding-right: 16px; }
+      .fav-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+          <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+        </svg>
+      </div>
+      <span class="logo-text">S+Tutor.my</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="list.html">Tutors</a></li>
+      <li><a href="chat.html">Chat</a></li>
+    </ul>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+    <div class="side-menu-header">
+      <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+      <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="index.html">Home</a>
+      <a href="list.html">Find Tutors</a>
+      <a href="chat.html">Chat</a>
+      <a href="favourite.html" class="active">Favourites</a>
+      <a href="mybooking.html">My Bookings</a>
+      <a href="about.html">About Us</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="side-menu-footer">
+      <a href="login.html" class="btn-login">Log In</a>
+      <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+    </div>
+  </aside>
+
+  <!-- PAGE HEADER -->
+  <div class="fav-page-header">
+    <h1>My Favourites</h1>
+    <p>Tutors you've saved for easy access.</p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="fav-container">
+    <div id="favCount" class="fav-count"></div>
+    <div id="favGrid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 S+Tutor.my. All rights reserved.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      renderFavourites();
+    });
+
+    function removeFavourite(id) {
+      STFav.remove(id);
+      renderFavourites();
+    }
+
+    function renderFavourites() {
+      const favs = STFav.get();
+      const grid = document.getElementById("favGrid");
+      const count = document.getElementById("favCount");
+
+      count.textContent = `${favs.length} saved tutor${favs.length !== 1 ? "s" : ""}`;
+
+      if (!favs.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">♡</div>
+            <h2>No favourites yet</h2>
+            <p>Tap the ♡ heart on any tutor card to save them here for quick access.</p>
+            <a href="list.html" class="btn-primary" style="margin-top:8px;text-decoration:none">Browse Tutors</a>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = "";
+      favs.forEach(t => {
+        const stars = "★".repeat(t.rating) + "☆".repeat(5 - t.rating);
+        const card = document.createElement("div");
+        card.className = "fav-card";
+        card.innerHTML = `
+          <div class="fav-card-top">
+            <div class="fav-avatar">${t.profileSvg
+              ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">${t.profileSvg.replace(/<svg[^>]*>/,'').replace('</svg>','')}</svg>`
+              : t.avatar}</div>
+            <div class="fav-info">
+              <div class="fav-name">${t.name}</div>
+              <div class="fav-subject">${t.subject} · ${t.teachingLevel}</div>
+              <div class="fav-stars">${stars} <span>(${t.reviews} reviews)</span></div>
+            </div>
+            <button class="fav-remove-btn" title="Remove from favourites" onclick="event.stopPropagation(); removeFavourite(${t.id})">♥</button>
+          </div>
+          <div class="fav-card-footer">
+            <div class="fav-rate">RM${t.rate}<small>/hour</small></div>
+            <div class="fav-actions">
+              <button class="btn-secondary" onclick="event.stopPropagation(); location.href='chat.html?id=${t.id}'">💬 Chat</button>
+              <button class="btn-book" onclick="event.stopPropagation(); location.href='booking.html?id=${t.id}'">📅 Book</button>
+            </div>
+          </div>`;
+        card.addEventListener("click", () => location.href = `profile.html?id=${t.id}`);
+        grid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — Find Tutors</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+  <!-- ============================================================
+       NAVBAR — sama untuk semua page.
+       Tukar class "active" pada link yang sesuai mengikut page semasa.
+       hamburger-btn → buka side-menu bila ditekan.
+  ============================================================ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+          <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+        </svg>
+      </div>
+      <span class="logo-text">S+Tutor.my</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" >Home</a></li>
+      <li><a href="list.html" class="active">Tutors</a></li>
+      <li><a href="chat.html" >Chat</a></li>
+    </ul>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+    <div class="side-menu-header">
+      <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+      <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="index.html">Home</a>
+      <a href="list.html" class="active">Find Tutors</a>
+      <a href="chat.html">Chat</a>
+      <a href="favourite.html">Favourites</a>
+      <a href="mybooking.html">My Bookings</a>
+      <a href="about.html">About Us</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="side-menu-footer">
+      <a href="login.html" class="btn-login">Log In</a>
+      <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+    </div>
+  </aside>
+
+  <!-- Hamburger initialised by initHamburger() in auth.js -->
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <h1>Find Your Perfect Tutor</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search by name or subject…" />
+    </div>
+  </header>
+
+  <!-- MAIN: SIDEBAR + LISTING -->
+  <main class="main-layout">
+
+    <!-- SIDEBAR FILTER -->
+    <aside class="sidebar">
+      <h2 class="filter-title">Filter</h2>
+
+      <div class="filter-group">
+        <label for="priceSelect">Max Hourly Rate (RM)</label>
+        <select id="priceSelect">
+          <option value="">Any Price</option>
+          <option value="30">Up to RM30</option>
+          <option value="50">Up to RM50</option>
+          <option value="70">Up to RM70</option>
+          <option value="100">Up to RM100</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="levelSelect">Student Level</label>
+        <select id="levelSelect">
+          <option value="">Any Level</option>
+          <optgroup label="Primary School">
+            <option value="y1">Year 1</option>
+            <option value="y2">Year 2</option>
+            <option value="y3">Year 3</option>
+            <option value="y4">Year 4</option>
+            <option value="y5">Year 5</option>
+            <option value="y6">Year 6</option>
+          </optgroup>
+          <optgroup label="Lower Secondary">
+            <option value="f1">Form 1</option>
+            <option value="f2">Form 2</option>
+            <option value="f3">Form 3</option>
+          </optgroup>
+          <optgroup label="Upper Secondary">
+            <option value="f4">Form 4</option>
+            <option value="f5">Form 5</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="subjectSelect">Subject</label>
+        <select id="subjectSelect">
+          <option value="">Any Subject</option>
+          <optgroup label="Core Subjects">
+            <option value="bm">Bahasa Melayu</option>
+            <option value="bi">English</option>
+            <option value="math">Mathematics</option>
+            <option value="sains">Science</option>
+          </optgroup>
+          <optgroup label="Electives (F4–F5)">
+            <option value="addmath">Additional Mathematics</option>
+            <option value="kimia">Chemistry</option>
+            <option value="bio">Biology</option>
+            <option value="physic">Physics</option>
+            <option value="cs">Computer Science</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="filter-checkbox-container">
+        <input type="checkbox" id="topRated" />
+        <label for="topRated">Top rated (5★ only)</label>
+      </div>
+
+      <button class="btn-apply" id="applyFilter">Apply Filter</button>
+      <button class="btn-apply" id="resetFilter"
+        style="background:var(--slot);color:var(--navy);border:1.5px solid var(--navy);margin-top:8px;">
+        Reset
+      </button>
+    </aside>
+
+    <!-- TUTOR LISTING -->
+    <section class="tutor-listing">
+      <div id="resultCount" style="font-size:.85rem;color:var(--muted);margin-bottom:14px;"></div>
+      <div id="tutorList"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 S+Tutor.my. All rights reserved.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    let allTutors = [];
+
+    /* ── INIT ── */
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("tutors.json")
+        .then(r => r.json())
+        .then(data => {
+          allTutors = data;
+
+          // Check if there's a search query from home page (?q=...)
+          const params = new URLSearchParams(window.location.search);
+          const queryFromHome = params.get("q");
+
+          if (queryFromHome) {
+            // Pre-fill the search box and apply filter immediately
+            document.getElementById("searchInput").value = queryFromHome;
+            applyFilter();
+          } else {
+            renderTutors(allTutors);
+          }
+        })
+        .catch(() => {
+          document.getElementById("tutorList").innerHTML =
+            `<p style="text-align:center;padding:40px 0;color:var(--muted)">
+              ⚠️ Gagal load data. Guna Live Server.</p>`;
+        });
+
+      document.getElementById("applyFilter").addEventListener("click", applyFilter);
+      document.getElementById("resetFilter").addEventListener("click", resetFilter);
+      document.getElementById("searchInput").addEventListener("input", applyFilter);
+    });
+
+    /* ── RENDER ── */
+    function renderTutors(list) {
+      const container = document.getElementById("tutorList");
+      const count     = document.getElementById("resultCount");
+      count.textContent = `${list.length} tutor${list.length !== 1 ? "s" : ""} found`;
+
+      if (!list.length) {
+        container.innerHTML =
+          `<p style="text-align:center;padding:40px 0;color:var(--muted)">
+            Tiada tutor dijumpai untuk kriteria ini. Cuba ubah filter.</p>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      list.forEach(t => {
+        const stars = "★".repeat(t.rating) + "☆".repeat(5 - t.rating);
+        const card  = document.createElement("div");
+        card.className = "tutor-card";
+        card.style.marginBottom = "16px";
+        card.innerHTML = `
+          <div class="card-body">
+            <div class="profile-box">${t.profileSvg ? t.profileSvg : t.avatar}</div>
+            <div class="tutor-info">
+              <h3>${t.name}</h3>
+              <p class="card-subject">${t.subject} · ${t.teachingLevel}</p>
+              <p class="about">${t.about}</p>
+              <p class="rating" style="color:var(--accent);font-size:.85rem">${stars}
+                <span style="color:var(--muted)">(${t.reviews} reviews)</span>
+              </p>
+              <p class="price-tag">RM${t.rate}/hour</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="icons">
+              <span title="Favourite" style="cursor:pointer;font-size:1.2rem">♡</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-book" onclick="location.href='profile.html?id=${t.id}'">View</button>
+            </div>
+          </div>`;
+
+        /* clicking the card goes to profile */
+        card.addEventListener("click", e => {
+          if (e.target.closest("button") || e.target.closest("span[title]")) return;
+          location.href = `profile.html?id=${t.id}`;
+        });
+        container.appendChild(card);
+      });
+    }
+
+    /* ── FILTER ── */
+    function applyFilter() {
+      const search   = document.getElementById("searchInput").value.trim().toLowerCase();
+      const price    = document.getElementById("priceSelect").value;
+      const level    = document.getElementById("levelSelect").value;
+      const subject  = document.getElementById("subjectSelect").value;
+      const topRated = document.getElementById("topRated").checked;
+
+      let result = allTutors.filter(t => {
+        if (search  && !t.name.toLowerCase().includes(search) && !t.subject.toLowerCase().includes(search)) return false;
+        if (price   && t.rate > parseInt(price)) return false;
+        if (level   && t.level !== level) return false;
+        if (subject && t.subjectCode !== subject) return false;
+        if (topRated && t.rating < 5) return false;
+        return true;
+      });
+
+      renderTutors(result);
+    }
+
+    /* ── RESET ── */
+    function resetFilter() {
+      document.getElementById("searchInput").value  = "";
+      document.getElementById("priceSelect").value   = "";
+      document.getElementById("levelSelect").value   = "";
+      document.getElementById("subjectSelect").value = "";
+      document.getElementById("topRated").checked    = false;
+      // Also clear the URL param without page reload
+      history.replaceState(null, "", "list.html");
+      renderTutors(allTutors);
+    }
+  </script>
+</body>
+</html>

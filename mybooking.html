@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — My Bookings</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+  <style>
+    .bookings-header {
+      padding: 40px 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .bookings-header h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .bookings-header p { font-size: 0.9rem; color: var(--muted); }
+
+    .bookings-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 40px 60px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Tab filter */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+      background: var(--surface-alt);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      width: fit-content;
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      border: none;
+      background: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .tab-btn.active {
+      background: var(--white);
+      color: var(--navy);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Booking card */
+    .booking-item {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s;
+    }
+    .booking-item:hover { box-shadow: var(--shadow-md); }
+
+    /* Status stripe on left */
+    .booking-stripe {
+      width: 4px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      align-self: stretch;
+      min-height: 60px;
+    }
+    .stripe-upcoming { background: #2a7a4a; }
+    .stripe-completed { background: var(--muted); }
+    .stripe-cancelled { background: #c0392b; }
+
+    .booking-body { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .booking-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .booking-tutor-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+    .booking-subject {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .booking-status-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+    .badge-upcoming { background: #e8f5ef; color: #2a7a4a; }
+    .badge-completed { background: var(--surface-alt); color: var(--muted); }
+    .badge-cancelled { background: #fdf0ef; color: #c0392b; }
+
+    .booking-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.84rem;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+    .booking-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .booking-meta-item .label {
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    .booking-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--cream-dark);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .booking-ref {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+    .booking-price {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--navy);
+    }
+    .booking-actions { display: flex; gap: 8px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .empty-icon { font-size: 3.5rem; opacity: .3; }
+    .empty-state h2 { font-family: var(--font-display); font-size: 1.4rem; color: var(--navy); }
+    .empty-state p { font-size: 0.9rem; color: var(--muted); max-width: 320px; }
+
+    .count-line { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
+
+    /* Cancel confirm modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,26,78,.5);
+      z-index: 300;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .modal-box p { font-size: .88rem; color: var(--muted); margin-bottom: 24px; }
+    .modal-btns { display: flex; gap: 10px; }
+    .modal-btns button { flex: 1; }
+
+    @media (max-width: 700px) {
+      .bookings-header, .bookings-container { padding-left: 16px; padding-right: 16px; }
+      .booking-item { flex-direction: column; gap: 10px; }
+      .booking-stripe { width: 100%; height: 4px; min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+          <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+        </svg>
+      </div>
+      <span class="logo-text">S+Tutor.my</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="list.html">Tutors</a></li>
+      <li><a href="chat.html">Chat</a></li>
+    </ul>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+    <div class="side-menu-header">
+      <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+      <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="index.html">Home</a>
+      <a href="list.html">Find Tutors</a>
+      <a href="chat.html">Chat</a>
+      <a href="favourite.html">Favourites</a>
+      <a href="mybooking.html" class="active">My Bookings</a>
+      <a href="about.html">About Us</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="side-menu-footer">
+      <a href="login.html" class="btn-login">Log In</a>
+      <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+    </div>
+  </aside>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("hamburgerBtn");
+      var menu = document.getElementById("sideMenu");
+      var overlay = document.getElementById("menuOverlay");
+      var close = document.getElementById("menuClose");
+      function openMenu() { menu.classList.add("is-open"); overlay.classList.add("is-open"); btn.classList.add("is-open"); btn.setAttribute("aria-expanded","true"); document.body.style.overflow="hidden"; }
+      function closeMenu() { menu.classList.remove("is-open"); overlay.classList.remove("is-open"); btn.classList.remove("is-open"); btn.setAttribute("aria-expanded","false"); document.body.style.overflow=""; }
+      btn.addEventListener("click", openMenu);
+      close.addEventListener("click", closeMenu);
+      overlay.addEventListener("click", closeMenu);
+      document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeMenu(); });
+    })();
+  </script>
+
+  <!-- PAGE HEADER -->
+  <div class="bookings-header">
+    <h1>My Bookings 📅</h1>
+    <p>Track and manage all your tutoring sessions.</p>
+  </div>
+
+  <!-- MAIN -->
+  <div class="bookings-container">
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="filterBookings('all', this)">All</button>
+      <button class="tab-btn" onclick="filterBookings('upcoming', this)">Upcoming</button>
+      <button class="tab-btn" onclick="filterBookings('completed', this)">Completed</button>
+      <button class="tab-btn" onclick="filterBookings('cancelled', this)">Cancelled</button>
+    </div>
+    <div id="countLine" class="count-line"></div>
+    <div id="bookingsList"></div>
+  </div>
+
+  <!-- Cancel modal -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal-box">
+      <h3>Cancel Booking?</h3>
+      <p>Are you sure you want to cancel this session? This action cannot be undone.</p>
+      <div class="modal-btns">
+        <button class="btn-secondary" onclick="closeCancelModal()">Keep It</button>
+        <button class="btn-pay" id="confirmCancelBtn" style="background:#c0392b;border-color:#c0392b">Yes, Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 S+Tutor.my. All rights reserved.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    let currentFilter = "all";
+    let cancelTargetRef = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderBookings();
+    });
+
+    function getBookings() {
+      try { return JSON.parse(localStorage.getItem("stutor_bookings")) || []; }
+      catch { return []; }
+    }
+
+    function saveBookings(list) {
+      localStorage.setItem("stutor_bookings", JSON.stringify(list));
+    }
+
+    function filterBookings(filter, el) {
+      currentFilter = filter;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+      renderBookings();
+    }
+
+    function renderBookings() {
+      let bookings = getBookings();
+
+      // Sort: newest first (by bookingDate)
+      bookings.sort((a, b) => new Date(b.bookedAt) - new Date(a.bookedAt));
+
+      // Auto-mark past upcoming as completed
+      const now = new Date();
+      let changed = false;
+      bookings = bookings.map(b => {
+        if (b.status === "upcoming") {
+          const sessionDT = new Date(`${b.date} ${b.time}`);
+          if (!isNaN(sessionDT) && sessionDT < now) {
+            b.status = "completed";
+            changed = true;
+          }
+        }
+        return b;
+      });
+      if (changed) saveBookings(bookings);
+
+      const filtered = currentFilter === "all" ? bookings : bookings.filter(b => b.status === currentFilter);
+
+      const list = document.getElementById("bookingsList");
+      const countLine = document.getElementById("countLine");
+
+      countLine.textContent = `${filtered.length} booking${filtered.length !== 1 ? "s" : ""}`;
+
+      if (!filtered.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <h2>No bookings here</h2>
+            <p>${currentFilter === "all" ? "You haven't made any bookings yet. Find a tutor and book your first session!" : `No ${currentFilter} bookings found.`}</p>
+            ${currentFilter === "all" ? `<a href="list.html" class="btn-primary" style="margin-top:8px;text-decoration:none">Find a Tutor</a>` : ""}
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = "";
+      filtered.forEach(b => {
+        const stripeClass = b.status === "upcoming" ? "stripe-upcoming" : b.status === "cancelled" ? "stripe-cancelled" : "stripe-completed";
+        const badgeClass  = b.status === "upcoming" ? "badge-upcoming"  : b.status === "cancelled" ? "badge-cancelled"  : "badge-completed";
+        const badgeLabel  = b.status === "upcoming" ? "✦ Upcoming"      : b.status === "cancelled" ? "✕ Cancelled"       : "✓ Completed";
+
+        const item = document.createElement("div");
+        item.className = "booking-item";
+        item.innerHTML = `
+          <div class="booking-stripe ${stripeClass}"></div>
+          <div class="booking-body">
+            <div class="booking-top">
+              <div>
+                <div class="booking-tutor-name">${b.tutorName}</div>
+                <div class="booking-subject">${b.subject}</div>
+              </div>
+              <span class="booking-status-badge ${badgeClass}">${badgeLabel}</span>
+            </div>
+            <div class="booking-meta">
+              <div class="booking-meta-item">
+                <span class="label">📅 Date</span>
+                <strong>${b.date}</strong>
+              </div>
+              <div class="booking-meta-item">
+                <span class="label">🕐 Time</span>
+                <strong>${b.time}</strong>
+              </div>
+              <div class="booking-meta-item">
+                <span class="label">⏳ Duration</span>
+                <strong>${b.duration}</strong>
+              </div>
+              <div class="booking-meta-item">
+                <span class="label">📍 Mode</span>
+                <strong>${b.mode || "Online"}</strong>
+              </div>
+            </div>
+            <div class="booking-footer">
+              <div>
+                <span class="booking-ref">Ref: ${b.ref}</span><br>
+                <span style="font-size:.75rem;color:var(--muted)">Booked on ${b.bookedAt}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <span class="booking-price">RM${b.total}</span>
+                <div class="booking-actions">
+                  ${b.status === "upcoming" ? `
+                    <button class="btn-secondary" onclick="location.href='chat.html?id=${b.tutorId}'">💬 Chat</button>
+                    <button class="btn-secondary" style="color:#c0392b;border-color:#c0392b;" onclick="openCancelModal('${b.ref}')">Cancel</button>
+                  ` : b.status === "completed" ? `
+                    <button class="btn-secondary" onclick="location.href='list.html'">Book Again</button>
+                  ` : `<span style="font-size:.8rem;color:var(--muted)">Session cancelled</span>`}
+                </div>
+              </div>
+            </div>
+          </div>`;
+        list.appendChild(item);
+      });
+    }
+
+    function openCancelModal(ref) {
+      cancelTargetRef = ref;
+      document.getElementById("cancelModal").classList.add("active");
+      document.getElementById("confirmCancelBtn").onclick = () => {
+        cancelBooking(cancelTargetRef);
+        closeCancelModal();
+      };
+    }
+
+    function closeCancelModal() {
+      document.getElementById("cancelModal").classList.remove("active");
+      cancelTargetRef = null;
+    }
+
+    function cancelBooking(ref) {
+      let bookings = getBookings();
+      bookings = bookings.map(b => b.ref === ref ? { ...b, status: "cancelled" } : b);
+      saveBookings(bookings);
+      renderBookings();
+    }
+  </script>
+</body>
+</html>

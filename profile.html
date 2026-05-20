@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S+Tutor.my — Tutor Profile</title>
+  <link rel="stylesheet" href="global.css" />
+  <script>/* S+Tutor: prevent night-mode flash */if(localStorage.getItem("stutor_night")==="1"){document.documentElement.classList.add("night-mode");}</script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+  <!-- ============================================================
+       NAVBAR — sama untuk semua page.
+       Tukar class "active" pada link yang sesuai mengikut page semasa.
+       hamburger-btn → buka side-menu bila ditekan.
+  ============================================================ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="0" y="0" width="12" height="28" rx="2" fill="#1a1a4e"/>
+          <rect x="16" y="8" width="12" height="20" rx="2" fill="#1a1a4e"/>
+        </svg>
+      </div>
+      <span class="logo-text">S+Tutor.my</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" >Home</a></li>
+      <li><a href="list.html" >Tutors</a></li>
+      <li><a href="chat.html" >Chat</a></li>
+    </ul>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <aside class="side-menu" id="sideMenu" role="dialog" aria-label="Navigation menu">
+    <div class="side-menu-header">
+      <a href="index.html" class="side-menu-logo">S+Tutor.my</a>
+      <button class="side-menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <nav class="side-menu-nav">
+      <a href="index.html">Home</a>
+      <a href="list.html">Find Tutors</a>
+      <a href="chat.html">Chat</a>
+      <a href="favourite.html">Favourites</a>
+      <a href="mybooking.html">My Bookings</a>
+      <a href="about.html">About Us</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+    <div class="side-menu-footer">
+      <a href="login.html" class="btn-login">Log In</a>
+      <a href="signup.html" class="btn-signup-menu">Sign Up &mdash; It&#39;s Free</a>
+    </div>
+  </aside>
+
+  <!-- Hamburger initialised by initHamburger() in auth.js -->
+
+  <!-- PROFILE LAYOUT -->
+  <div class="profile-container">
+
+    <!-- LEFT: Profile info -->
+    <div class="profile-info">
+      <div class="profile-header">
+        <div class="profile-img-circle" id="profileAvatar">?</div>
+        <div>
+          <h1 id="tutorName">Loading…</h1>
+          <p class="subject" id="tutorSubject">—</p>
+          <div class="rating">
+            <span id="starsDisplay">★★★★★</span>
+            <span id="ratingText">(— reviews)</span>
+          </div>
+          <div class="badges" id="badgesContainer"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>About Me</h2>
+        <p id="aboutText">—</p>
+      </div>
+
+      <div class="section details">
+        <h2>Details</h2>
+        <p><strong>📍 Location:</strong> <span id="detLocation">—</span></p>
+        <p><strong>🎓 Teaching Level:</strong> <span id="detLevel">—</span></p>
+        <p><strong>⏳ Experience:</strong> <span id="detExp">—</span></p>
+        <p><strong>📅 Availability:</strong> <span id="detAvail">—</span></p>
+      </div>
+
+      <div class="section">
+        <h2>Reviews</h2>
+        <div class="review">
+          <h4>Amirul H. ★★★★★</h4>
+          <p>"Best tutor I've ever had. My Add Maths went from F to A in 3 months!"</p>
+        </div>
+        <div class="review">
+          <h4>Nurul A. ★★★★★</h4>
+          <p>"Very patient and explains everything clearly. Highly recommend!"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Sticky booking card -->
+    <div class="booking-card">
+      <span class="price" id="priceDisplay">RM—<small>/hour</small></span>
+      <button class="book-btn" id="bookBtn">📅 Book Session</button>
+      <button class="chat-btn" id="chatBtn">💬 Chat Now</button>
+      <button class="btn-secondary" id="favBtn" style="width:100%;margin-top:4px;font-size:.9rem" onclick="toggleFav()">♡ Add to Favourites</button>
+      <div style="border-top:1px solid var(--cream-dark);padding-top:12px;font-size:.8rem;color:var(--muted);line-height:1.6">
+        ✅ Free cancellation 24 hrs before<br>
+        🔒 Secure payment via FPX / card
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 S+Tutor.my. All rights reserved.</p>
+  </footer>
+
+  <script src="auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const id     = parseInt(params.get("id")) || 1;
+
+      fetch("tutors.json")
+        .then(r => r.json())
+        .then(tutors => {
+          const tutor = tutors.find(t => t.id === id) || tutors[0];
+          renderProfile(tutor);
+        })
+        .catch(() => {
+          document.getElementById("tutorName").textContent = "⚠️ Gagal load data.";
+        });
+    });
+
+    function renderProfile(t) {
+      document.title = `${t.name} — S+Tutor.my`;
+
+      const avatarEl = document.getElementById("profileAvatar");
+      if (t.profileSvg) {
+        avatarEl.innerHTML = t.profileSvg;
+        avatarEl.style.background = "none";
+        avatarEl.style.padding = "0";
+        avatarEl.style.overflow = "hidden";
+      } else {
+        avatarEl.textContent = t.avatar;
+      }
+      document.getElementById("tutorName").textContent      = t.name;
+      document.getElementById("tutorSubject").textContent   = `${t.subject} · ${t.teachingLevel}`;
+      document.getElementById("starsDisplay").textContent   = "★".repeat(t.rating) + "☆".repeat(5 - t.rating);
+      document.getElementById("ratingText").textContent     = `(${t.reviews} reviews)`;
+      document.getElementById("aboutText").textContent      = t.about;
+      document.getElementById("detLocation").textContent    = t.location;
+      document.getElementById("detLevel").textContent       = t.teachingLevel;
+      document.getElementById("detExp").textContent         = t.experience;
+      document.getElementById("detAvail").textContent       = t.availability.join(", ");
+      document.getElementById("priceDisplay").innerHTML     = `RM${t.rate}<small>/hour</small>`;
+
+      /* Badges */
+      const badgesEl = document.getElementById("badgesContainer");
+      badgesEl.innerHTML = t.badges.map(b => `<span class="badge">${b}</span>`).join("");
+
+      /* Book button → booking page with tutor id */
+      document.getElementById("bookBtn").addEventListener("click", () => {
+        location.href = `booking.html?id=${t.id}`;
+      });
+
+      /* Chat button → chat page with tutor id */
+      document.getElementById("chatBtn").addEventListener("click", () => {
+        location.href = `chat.html?id=${t.id}`;
+      });
+
+      /* Favourite button */
+      updateFavBtn(t.id);
+      window._currentTutor = t;
+    }
+
+    function updateFavBtn(id) {
+      const btn = document.getElementById("favBtn");
+      if (!btn) return;
+      btn.textContent = STFav.isFav(id) ? "♥ Saved to Favourites" : "♡ Add to Favourites";
+      btn.style.color = STFav.isFav(id) ? "#e74c3c" : "";
+      btn.style.borderColor = STFav.isFav(id) ? "#e74c3c" : "";
+    }
+
+    function toggleFav() {
+      const t = window._currentTutor;
+      if (!t) return;
+      STFav.toggle(t);
+      updateFavBtn(t.id);
+    }
+  </script>
+</body>
+</html>
